@@ -45,6 +45,13 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Running Seed
+Seed is Insert Dummy data to Database
+
+```bash
+$ npx prisma db seed
+```
+
 ## Test
 
 ```bash
