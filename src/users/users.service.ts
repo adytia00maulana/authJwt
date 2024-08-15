@@ -33,7 +33,7 @@ export class UsersService {
     if (updateUserDto.password) {
       updateUserDto.password = await argon2.hash(updateUserDto.password, { hashLength: roundsOfHashing });
     }
-    this.logger.log(`${UsersService.name} - Find By Id ${id}`);
+    this.logger.log(`${UsersService.name} - Update By Id ${id} With Body ${JSON.stringify(updateUserDto)}`);
 
     return this.prisma.user.update({
       where: { id },
