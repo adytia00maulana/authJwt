@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiCreatedResponse, ApiTags } from "@nestjs/swagger";
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { User as UserEntity } from "./entities/user.entity";
 
 @Controller('users')
@@ -17,13 +17,13 @@ export class UsersController {
   }
 
   @Get()
-  @ApiCreatedResponse({ type: UserEntity, isArray: true })
+  @ApiOkResponse({ type: UserEntity, isArray: true })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @ApiCreatedResponse({ type: UserEntity })
+  @ApiOkResponse({ type: UserEntity })
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
@@ -35,7 +35,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @ApiCreatedResponse({ type: UserEntity })
+  @ApiOkResponse({ type: UserEntity })
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
