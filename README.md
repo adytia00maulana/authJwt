@@ -45,6 +45,17 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Running Prisma Migrate
+Seed is Insert Dummy data to Database
+<ul>
+    <li>It creates a new SQL migration file for this migration</li>
+    <li>It runs the SQL migration file against the database</li>
+</ul>
+
+```bash
+$ npx prisma migrate dev --name init
+```
+
 ## Running Seed
 Seed is Insert Dummy data to Database
 
