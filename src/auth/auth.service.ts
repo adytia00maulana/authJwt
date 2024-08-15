@@ -3,6 +3,8 @@ import { PrismaService } from "../prisma/prisma.service";
 import { JwtService } from "@nestjs/jwt";
 import { AuthEntity } from "./entities/auth.entity";
 
+import * as argon2 from "argon2";
+
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
@@ -17,7 +19,7 @@ export class AuthService {
     }
 
     // Step 2: Check if the password is correct
-    const isPasswordValid = user.password === password;
+    const isPasswordValid = await argon2.verify(user.password, password);
 
     // If password does not match, throw an error
     if (!isPasswordValid) {
