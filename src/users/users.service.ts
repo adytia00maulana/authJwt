@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { PrismaService } from "../prisma/prisma.service";
@@ -8,10 +8,11 @@ export const roundsOfHashing = 10;
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private readonly logger: Logger) {}
 
   async create(createUserDto: CreateUserDto) {
     createUserDto.password = await argon2.hash(createUserDto.password,{ hashLength: roundsOfHashing });
+    this.logger.log(`${UsersService.name} - created with body ${JSON.stringify(createUserDto)}`);
 
     return this.prisma.user.create({
       data: createUserDto,
@@ -19,10 +20,12 @@ export class UsersService {
   }
 
   findAll() {
+    this.logger.log(`${UsersService.name} - Find All`);
     return this.prisma.user.findMany();
   }
 
   findOne(id: number) {
+    this.logger.log(`${UsersService.name} - Find By Id ${id}`);
     return this.prisma.user.findUnique({ where: { id } });
   }
 
@@ -30,6 +33,7 @@ export class UsersService {
     if (updateUserDto.password) {
       updateUserDto.password = await argon2.hash(updateUserDto.password, { hashLength: roundsOfHashing });
     }
+    this.logger.log(`${UsersService.name} - Update By Id ${id} With Body ${JSON.stringify(updateUserDto)}`);
 
     return this.prisma.user.update({
       where: { id },
@@ -38,6 +42,7 @@ export class UsersService {
   }
 
   remove(id: number) {
+    this.logger.log(`${UsersService.name} - Delete By Id ${id}`);
     return this.prisma.user.delete({ where: { id } });
   }
 }
