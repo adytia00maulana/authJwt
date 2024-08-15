@@ -1,7 +1,7 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory, Reflector } from "@nestjs/core";
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
 import { PrismaClientExceptionFilter } from './config/global-exception/prisma-client-exception/prisma-client-exception.filter';
 
 async function bootstrap() {
@@ -9,6 +9,9 @@ async function bootstrap() {
 
   // Validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  // You will use this interceptor to remove the password field from the response object.
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   const config = new DocumentBuilder()
     .setTitle('Auth JWT')
