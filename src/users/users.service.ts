@@ -16,12 +16,7 @@ export class UsersService {
   }
 
   findOne(id: number) {
-    return this.prisma.article.findUnique({
-      where: { id },
-      include: {
-        author: true,
-      },
-    });
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
