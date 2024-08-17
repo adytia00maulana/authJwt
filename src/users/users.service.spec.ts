@@ -76,7 +76,7 @@ describe('UsersService', () => {
 
       const  result = await service.update(updateUser.id, updateUser as UpdateUserDto);
 
-      expect(result).toEqual(result);
+      expect(result).toEqual(updateUser);
     });
   });
 
