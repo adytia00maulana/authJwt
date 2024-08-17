@@ -52,18 +52,9 @@ describe('UsersService', () => {
   // Testing Create
   describe('create', () => {
     it('should create and return a user', async () => {
-      const newUser = {
-        id: 1,
-        name: 'admin',
-        email: 'admin@example.com',
-        password: 'password',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+      jest.spyOn(service, 'create').mockImplementationOnce(() => Promise.resolve(mockUser));
 
-      jest.spyOn(service, 'create').mockImplementationOnce(() => Promise.resolve(newUser));
-
-      const  result = await service.create(newUser as CreateUserDto);
+      const  result = await service.create(mockUser as CreateUserDto);
 
       expect(result).toEqual(result);
     });
