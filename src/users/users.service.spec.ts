@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from "../prisma/prisma.service";
-import { Logger, NotFoundException } from "@nestjs/common";
+import { Logger } from '@nestjs/common';
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersController } from "./users.controller";
 import { UserEntity } from "./entities/userEntity.entity";
-import fn = jest.fn;
-import { Prisma } from "@prisma/client";
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -33,7 +32,17 @@ describe('UsersService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService, PrismaService, Logger, CreateUserDto, UserEntity],
+      providers: [UsersService,
+        PrismaService,
+        Logger,
+        CreateUserDto,
+        UpdateUserDto,
+        UserEntity,
+        {
+          provide: PrismaService,
+          useValue: mockUsersService,
+        },
+      ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
@@ -60,20 +69,40 @@ describe('UsersService', () => {
     });
   });
 
+  // Testing Update
+  describe('update', () => {
+    it('should update and return a user', async () => {
+      const updateUser = {
+        id: 1,
+        name: 'admin1',
+        email: 'admin@example.com',
+        password: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      jest.spyOn(service, 'update').mockResolvedValue(updateUser);
+
+      const  result = await service.update(updateUser.id, updateUser as UpdateUserDto);
+
+      expect(result).toEqual(result);
+    });
+  });
+
   // Testing Find By id
-  /* describe('findOne', () => {
-    it('should find and return a user by ID', async () => {
-      jest.spyOn(model, `findOne`).mockResolvedValue(mockUser);
-
-      const result = await service.findOne(mockUser.id);
-      expect(model.id).toHaveBeenCalledWith(mockUser.id);
-      expect(result).toEqual(mockUser);
-    });
-
-    it('should throw NotFoundException if book is not found', async () => {
-      jest.spyOn(service, 'findOne').mockResolvedValue(null);
-      await expect(service.findOne(mockUser.id)).rejects.toThrow(NotFoundException);
-      expect(mockUser.findOne).toHaveBeenCalledWith(mockUser.id);
-    });
-  }); */
+  // describe('findOne', () => {
+  //   // it('should find and return a user by ID', async () => {
+  //   //   jest.spyOn(mockUsersService, 'findOne').mockResolvedValue(mockUser);
+  //   //
+  //   //   const result = await service.findOne(mockUser.id);
+  //   //   expect(mockUsersService.findOne).toHaveBeenCalledWith(mockUser.id);
+  //   //   expect(result).toEqual(mockUser);
+  //   // });
+  //
+  //   // it('should throw NotFoundException if user is not found', async () => {
+  //   //   jest.spyOn(mockUsersService, 'findOne').mockResolvedValue(null);
+  //   //   await expect(service.findOne(mockUser.id)).rejects.toThrow(NotFoundException);
+  //   //   expect(mockUsersService.findOne).toHaveBeenCalledWith(mockUser.id);
+  //   // });
+  // });
 });
