@@ -36,6 +36,14 @@ describe('ArticlesService', () => {
     }
   }
 
+  const mockDataCreateUpdate = {
+    id: 19,
+    title: "Article Testing",
+    description: "Just For Unit Test Auricle",
+    body: "Support unit Test for Article",
+    published: false
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -55,15 +63,8 @@ describe('ArticlesService', () => {
   // Testing Create
   describe('create', () => {
     it('should create', async () => {
-      const newArticle = {
-        title: "Article Testing",
-        description: "Just For Unit Test Aericle",
-        body: "Support unit Test for Article",
-        published: false,
-        // authorId: null
-      }
-      mockService.article.create.mockResolvedValueOnce(() => Promise.resolve(newArticle));
-      const result = await service.create(newArticle as CreateArticleDto);
+      mockService.article.create.mockResolvedValueOnce(() => Promise.resolve(mockDataCreateUpdate));
+      const result = await service.create(mockDataCreateUpdate as CreateArticleDto);
       expect(result).toEqual(result) // this Expected Result cannot Mock newArticle because Bug in Mapping Create Article
     });
   });
@@ -71,16 +72,8 @@ describe('ArticlesService', () => {
   // Testing Update
   describe('update', () => {
     it('should update', async () => {
-      const updateArticle = {
-        id: 19,
-        title: "Article Testing",
-        description: "Just For Unit Test Aericle",
-        body: "Support unit Test for Article",
-        published: false,
-        // authorId: null
-      }
-      mockService.article.update.mockResolvedValue(()=>Promise.resolve(updateArticle));
-      const result = await service.update(updateArticle.id, updateArticle as UpdateArticleDto);
+      mockService.article.update.mockResolvedValue(()=>Promise.resolve(mockDataCreateUpdate));
+      const result = await service.update(mockDataCreateUpdate.id, mockDataCreateUpdate as UpdateArticleDto);
       expect(result).toEqual(result); // this Expected Result cannot Mock newArticle because Bug in Mapping Create Article
     });
   });
