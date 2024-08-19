@@ -58,7 +58,7 @@ describe('UsersService', () => {
 
       const  result = await service.create(mockUser as CreateUserDto);
 
-      expect(result).toEqual(result);
+      expect(result).toEqual(mockUser);
     });
   });
 
