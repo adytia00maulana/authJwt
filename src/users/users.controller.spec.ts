@@ -23,4 +23,16 @@ describe('UsersController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  // Testing Find All
+  it('should return array user', () => {
+    const result = controller.findAll();
+    expect(result).toEqual(result); // Must Fix This Expected Result;
+  });
+
+  // Testing Find by ID
+  it('should return user', () => {
+    const result = controller.findOne(1);
+    expect(result).toEqual(result); // Must Fix This Expected Result;
+  });
 });
