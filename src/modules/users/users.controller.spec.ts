@@ -1,22 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ArticlesController } from './articles.controller';
-import { ArticlesService } from './articles.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { Logger } from '@nestjs/common';
-describe('ArticlesController', () => {
-  let controller: ArticlesController;
+
+describe('UsersController', () => {
+  let controller: UsersController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ArticlesController],
+      controllers: [UsersController],
       providers: [
-        ArticlesService,
+        UsersService,
         PrismaService,
         Logger,
       ],
     }).compile();
 
-    controller = module.get<ArticlesController>(ArticlesController);
+    controller = module.get<UsersController>(UsersController);
   });
 
   it('should be defined', () => {
@@ -24,13 +25,13 @@ describe('ArticlesController', () => {
   });
 
   // Testing Find All
-  it('should return array articles', () => {
+  it('should return array user', () => {
     const result = controller.findAll();
     expect(result).toEqual(result); // Must Fix This Expected Result;
   });
 
   // Testing Find by ID
-  it('should return article by ID', () => {
+  it('should return user', () => {
     const result = controller.findOne(1);
     expect(result).toEqual(result); // Must Fix This Expected Result;
   });
