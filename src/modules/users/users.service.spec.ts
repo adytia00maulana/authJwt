@@ -10,7 +10,7 @@ import { UserEntity } from "./entities/userEntity.entity";
 describe('UsersService', () => {
   let service: UsersService;
 
-  const mockService = {
+  const mockPrisma = {
     create: jest.fn(),
     findOne: jest.fn(),
     findAll: jest.fn(),
@@ -35,7 +35,8 @@ describe('UsersService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService,
+      providers: [
+        UsersService,
         PrismaService,
         Logger,
         CreateUserDto,
@@ -43,7 +44,7 @@ describe('UsersService', () => {
         UserEntity,
         {
           provide: PrismaService,
-          useValue: mockService,
+          useValue: mockPrisma,
         },
       ],
     }).compile();
@@ -87,14 +88,14 @@ describe('UsersService', () => {
     it('should return all user', async () => {
       const allUser = [mockUser];
 
-      mockService.user.findMany.mockResolvedValue(allUser);
+      mockPrisma.user.findMany.mockResolvedValue(allUser);
 
       const result = await service.findAll();
       expect(result).toEqual(allUser);
     });
 
     it('should return empty array if there are no users', async () => {
-      mockService.user.findMany.mockResolvedValue([]);
+      mockPrisma.user.findMany.mockResolvedValue([]);
 
       const result = await service.findAll();
       expect(result).toEqual([]);
@@ -104,22 +105,22 @@ describe('UsersService', () => {
   // Testing Find By id
   describe('findOne', () => {
     it('should find and return a user by ID', async () => {
-      mockService.user.findUnique.mockResolvedValue(mockUser);
+      mockPrisma.user.findUnique.mockResolvedValueOnce(mockUser);
 
       const result = await service.findOne(mockUser.id);
       expect(result).toEqual(mockUser);
-      expect(mockService.user.findUnique).toBeCalledTimes(1);
-      expect(mockService.user.findUnique).toBeCalledWith({
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledTimes(1);
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: { id: mockUser.id },
       });
     });
 
     it('should throw NotFoundException if user is not found', async () => {
-      mockService.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.findUnique.mockResolvedValue(null);
 
       await expect(service.findOne(null)).rejects.toThrow(NotFoundException);
-      expect(mockService.user.findUnique).toBeCalledTimes(2);
-      expect(mockService.user.findUnique).toBeCalledWith({
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledTimes(2);
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: { id: null },
       });
     });
