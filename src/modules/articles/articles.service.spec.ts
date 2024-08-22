@@ -8,7 +8,7 @@ import { UpdateArticleDto } from "./dto/update-article.dto";
 describe('ArticlesService', () => {
   let service: ArticlesService;
 
-  const mockService = {
+  const mockPrisma = {
     article: {
       create: jest.fn(),
       update: jest.fn(),
@@ -24,15 +24,15 @@ describe('ArticlesService', () => {
     description: "We are excited to share that today's Prisma ORM release adds stable support for MongoDB!",
     body: "Support for MongoDB has been one of the most requested features since the initial release of...",
     published: false,
-    createdAt: "2024-08-15T01:40:19.966Z",
-    updatedAt: "2024-08-15T07:37:13.594Z",
+    createdAt: new Date(),
+    updatedAt: new Date(),
     authorId: 1,
     author: {
       id: 1,
       name: "Admin",
       email: "admin@gmail.com",
-      createdAt: "2024-08-15T01:48:38.072Z",
-      updatedAt: "2024-08-15T07:37:13.578Z"
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   }
 
@@ -52,7 +52,7 @@ describe('ArticlesService', () => {
         Logger,
         {
           provide: PrismaService,
-          useValue: mockService,
+          useValue: mockPrisma,
         },
       ],
     }).compile();
@@ -63,31 +63,33 @@ describe('ArticlesService', () => {
   // Testing Create
   describe('create', () => {
     it('should create', async () => {
-      mockService.article.create.mockResolvedValueOnce(() => Promise.resolve(mockDataCreateUpdate));
+      mockPrisma.article.create.mockResolvedValueOnce(mockDataCreateUpdate);
+
       const result = await service.create(mockDataCreateUpdate as CreateArticleDto);
-      expect(result).toEqual(result) // this Expected Result cannot Mock newArticle because Bug in Mapping Create Article
+      expect(result).toEqual(mockDataCreateUpdate);
     });
   });
 
   // Testing Update
   describe('update', () => {
     it('should update', async () => {
-      mockService.article.update.mockResolvedValue(()=>Promise.resolve(mockDataCreateUpdate));
+      mockPrisma.article.update.mockResolvedValue(mockDataCreateUpdate);
+
       const result = await service.update(mockDataCreateUpdate.id, mockDataCreateUpdate as UpdateArticleDto);
-      expect(result).toEqual(result); // this Expected Result cannot Mock newArticle because Bug in Mapping Create Article
+      expect(result).toEqual(mockDataCreateUpdate);
     });
   });
 
   // Testing Find All
   describe('findAll', () => {
     it('should return Array Articles', async () => {
-      mockService.article.findMany.mockResolvedValue([mockData]);
+      mockPrisma.article.findMany.mockResolvedValue([mockData]);
       const result = await service.findAll();
       expect(result).toEqual([mockData]);
     });
 
     it("should return empty array if there are no articles", async () => {
-      mockService.article.findMany.mockResolvedValue([]);
+      mockPrisma.article.findMany.mockResolvedValue([]);
       const result = await service.findAll();
       expect(result).toEqual([]);
     });
@@ -96,11 +98,11 @@ describe('ArticlesService', () => {
   // Testing Find By ID
   describe('findByID', () => {
     it('should return a article by ID', async () => {
-      mockService.article.findUnique.mockResolvedValue(mockData);
+      mockPrisma.article.findUnique.mockResolvedValueOnce(mockData);
       const result = await service.findOne(mockData.id);
       expect(result).toEqual(mockData);
-      expect(mockService.article.findUnique).toBeCalledTimes(1);
-      expect(mockService.article.findUnique).toBeCalledWith({
+      expect(mockPrisma.article.findUnique).toHaveBeenCalledTimes(1);
+      expect(mockPrisma.article.findUnique).toHaveBeenCalledWith({
         where: { id: mockData.id },
         include: {
           author: true,
@@ -109,10 +111,10 @@ describe('ArticlesService', () => {
     })
 
     it("should throw NotFoundException if article is not found", async () => {
-      mockService.article.findUnique.mockResolvedValue(null);
+      mockPrisma.article.findUnique.mockResolvedValueOnce(null);
       await expect(service.findOne(null)).rejects.toThrow(NotFoundException);
-      expect(mockService.article.findUnique).toBeCalledTimes(2);
-      expect(mockService.article.findUnique).toBeCalledWith({
+      expect(mockPrisma.article.findUnique).toHaveBeenCalledTimes(2);
+      expect(mockPrisma.article.findUnique).toHaveBeenCalledWith({
         where: {id: null},
         include: {
           author: true,
