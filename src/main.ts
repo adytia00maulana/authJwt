@@ -1,10 +1,10 @@
-import { HttpAdapterHost, NestFactory, Reflector } from "@nestjs/core";
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { PrismaClientExceptionFilter } from './config/global-exception/prisma-client-exception/prisma-client-exception.filter';
-import { instance } from "./config/logger/winston.logger";
-import { WinstonModule } from "nest-winston";
+import { instance } from './config/logger/winston.logger';
+import { WinstonModule } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
