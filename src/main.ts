@@ -8,6 +8,8 @@ import { WinstonModule } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
+    cors: true,
+
     // Enable Winston Logging
     logger: WinstonModule.createLogger({
       instance: instance,
@@ -36,4 +38,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
+
 bootstrap();
